@@ -7,7 +7,7 @@ const checkJwt = require('express-jwt');
 
 require('dotenv').config();
 
-router.use(checkJwt({ secret: process.env.JWT_SECRET })).unless({ path: '/api/authenticate' });
+router.use(checkJwt({ secret: process.env.JWT_SECRET }).unless({ path: '/api/authenticate' }));
 
 router.use((err, req, res, next) => {
     if (err.name === 'UnauthorizedError') {
@@ -34,6 +34,32 @@ router.post('/contacts', (req, res) => {
             res.status(422).send({ error: error });
         });
 });
+
+router.get('/contacts/:id', (req, res) => {
+    Contact.findOne({ _id: req.params.id })
+        .then(contact => {
+            res.send(contact);
+        })
+        .catch(err => {
+            res.status(404).send({ error: "No contact found" });
+        });
+});
+
+router.put('/contacts/:id', (req, res) => {
+    Contact.findOneAndUpdate({ _id: req.params.id }, req.body)
+        .then(() => {
+            Contact.findOne({ _id: req.params.id })
+                .then(contact => { res.send(contact); })
+        })
+        .catch(() => { res.status(500).send({ error: 'Could not update contact' }) });
+});
+
+router.delete('/contacts/:id', (req, res) => {
+    Contact.findByIdAndRemove(req.params.id)
+        .then(contact => res.status(200).send(contact))
+        .catch(() => { res.status(500).send({ error: 'Could not delete contact' }) });
+});
+
 
 router.post('/authenticate', (req, res) => {
     const user = req.body;
