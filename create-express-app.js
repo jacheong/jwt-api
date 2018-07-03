@@ -8,8 +8,8 @@ function createExpressApp() {
     const app = express();
 
     app.use(cors());
-    app.use(express.static(path.join(__dirname + "/public")));
     app.use('/api', express.static(path.join(__dirname + "/profiles")));
+    app.use(express.static(path.join(__dirname + "/public")));
     app.use(bodyParser.json());
 
     app.use('/api', routes);
