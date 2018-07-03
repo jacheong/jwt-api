@@ -7,7 +7,7 @@ const checkJwt = require('express-jwt');
 
 require('dotenv').config();
 
-router.use(checkJwt({ secret: process.env.JWT_SECRET }).unless({ path: '/api/authenticate' }));
+router.use(checkJwt({ secret: process.env.JWT_SECRET }).unless({ path: '/api/authenticate' }, { path: '/api/profiles' }));
 
 router.use((err, req, res, next) => {
     if (err.name === 'UnauthorizedError') {
