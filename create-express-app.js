@@ -9,7 +9,7 @@ function createExpressApp() {
 
     app.use(cors());
     app.use(express.static(path.join(__dirname + "/public")));
-    app.use(express.static(path.join(__dirname + "/profiles")));
+    app.use('/api', express.static(path.join(__dirname + "/profiles")));
     app.use(bodyParser.json());
 
     app.use('/api', routes);
